@@ -1,0 +1,11 @@
+package com.example.backend.auth.dto;
+
+public class VehicleDto {
+    @NotBlank(message = "model is required")
+    private String model;
+
+    @NotBlank(message = "make is required")
+    private String make;
+
+    private String color;
+}

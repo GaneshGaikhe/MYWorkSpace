@@ -1,0 +1,37 @@
+package com.example.backend.auth.controller;
+
+import com.example.backend.auth.exception.CustomAppException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/vehicles")
+public class VehicleController {
+
+    private final List<Map<String, String>> store = new ArrayList<>();
+
+    @GetMapping("/view")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<?> viewVehicles() {
+        if (store.isEmpty()) {
+            throw new CustomAppException("No vehicles found", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(store);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/add")
+    public ResponseEntity<?> addVehicle(@RequestBody Map<String, String> vehicle) {
+        if (vehicle == null || vehicle.isEmpty()) {
+            throw new CustomAppException("Vehicle data is empty", HttpStatus.BAD_REQUEST);
+        }
+        store.add(vehicle);
+        return ResponseEntity.ok("Vehicle added successfully");
+    }
+}

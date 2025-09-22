@@ -1,0 +1,1 @@
+Gateway omitted in this lightweight zip; use direct service ports 8081/8082 for testing.

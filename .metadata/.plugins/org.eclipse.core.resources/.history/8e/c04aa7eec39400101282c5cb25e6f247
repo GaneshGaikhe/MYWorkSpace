@@ -1,0 +1,58 @@
+package com.example.backend.auth.controller;
+
+import com.example.backend.auth.dto.RegisterRequest;
+import com.example.backend.auth.entity.User;
+import com.example.backend.auth.service.UserService;
+import com.example.backend.auth.util.JwtUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/auth")
+public class UserController {
+
+	
+	@Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+	
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
+        try {
+            User user = userService.registerUser(
+                    request.getUsername(),
+                    request.getPassword(),
+                    request.getFullName(),
+                    request.getEmail()
+            );
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    
+    
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest request) {
+        User user = userService.getByUsername(request.getUsername());
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Invalid username");
+        }
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid password");
+        }
+        String token = jwtUtil.generateToken(user.getUsername());
+        return ResponseEntity.ok(token);
+    }
+}

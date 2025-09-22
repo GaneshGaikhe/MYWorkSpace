@@ -1,0 +1,71 @@
+package com.example.vehicleauth.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Component
+public class JwtUtil {
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expirationMs}")
+    private int jwtExpirationMs;
+
+    @Value("${jwt.refreshExpirationMs}")
+    private int refreshExpirationMs;
+
+    public String generateAccessToken(String username, Set<String> roles) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("roles", roles);
+
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + jwtExpirationMs);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username) {
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + refreshExpirationMs);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public String getUsernameFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public Set<String> getRolesFromToken(String token) {
+        Claims body = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        Object roles = body.get("roles");
+        if (roles == null) return Set.of();
+        // roles might be a List -> convert to Set<String>
+        return ((java.util.List<?>) roles).stream().map(Object::toString).collect(Collectors.toSet());
+    }
+}

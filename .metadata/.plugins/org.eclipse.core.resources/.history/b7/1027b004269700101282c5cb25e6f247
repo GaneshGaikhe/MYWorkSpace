@@ -1,0 +1,21 @@
+package com.example.backend.auth.exception;
+
+import org.springframework.http.HttpStatus;
+
+/**
+ * Custom exception for application-specific errors.
+ * Allows centralized handling via @ControllerAdvice.
+ */
+public class CustomAppException extends RuntimeException {
+
+    private final HttpStatus status;
+
+    public CustomAppException(String message, HttpStatus status) {
+        super(message);
+        this.status = status;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+}

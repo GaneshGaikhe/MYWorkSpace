@@ -1,0 +1,62 @@
+package com.example.backend.auth.controller;
+
+import com.example.backend.auth.dto.LoginRequest;
+import com.example.backend.auth.dto.RegisterRequest;
+import com.example.backend.auth.entity.User;
+import com.example.backend.auth.service.UserService;
+import com.example.backend.auth.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/auth")
+public class UserController {
+
+    @Autowired private UserService userService;
+    @Autowired private JwtUtil jwtUtil;
+    @Autowired private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
+        try {
+            User u = userService.registerUser(req.getUsername(), req.getPassword(), req.getFullName(), req.getEmail());
+            // hide password in response
+            u.setPassword(null);
+            return ResponseEntity.ok(u);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
+        Optional<User> userOpt = userService.getByUsername(req.getUsername());
+        if (userOpt.isEmpty()) return ResponseEntity.badRequest().body("Invalid username/password");
+
+        User user = userOpt.get();
+        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid username/password");
+        }
+
+        String token = jwtUtil.generateToken(user.getUsername());
+        return ResponseEntity.ok(token);
+    }
+
+    // protected endpoint: returns current user (must include Authorization: Bearer <token>)
+    @GetMapping("/me")
+    public ResponseEntity<?> me(Authentication authentication) {
+        if (authentication == null) return ResponseEntity.status(401).body("Not authenticated");
+        String username = authentication.getName();
+        Optional<User> userOpt = userService.getByUsername(username);
+        if (userOpt.isEmpty()) return ResponseEntity.status(404).body("User not found");
+        User user = userOpt.get();
+        user.setPassword(null);
+        return ResponseEntity.ok(user);
+    }
+}

@@ -1,0 +1,43 @@
+package com.example.backend.auth.controller;
+
+import com.example.backend.auth.dto.VehicleDto;
+import com.example.backend.auth.entity.Vehicle;
+import com.example.backend.auth.service.VehicleService;
+import com.example.backend.auth.exception.CustomAppException;
+
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/vehicles")
+public class VehicleController {
+
+    private final VehicleService vehicleService;
+
+    public VehicleController(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
+    }
+
+    @GetMapping("/view")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<List<Vehicle>> viewVehicles() {
+        List<Vehicle> vehicles = vehicleService.listVehicles();
+        return ResponseEntity.ok(vehicles);
+    }
+
+    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Vehicle> addVehicle(@Valid @RequestBody VehicleDto dto) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setModel(dto.getModel());
+        vehicle.setMake(dto.getMake());
+        vehicle.setColor(dto.getColor());
+
+        Vehicle saved = vehicleService.addVehicle(vehicle);
+        return ResponseEntity.ok(saved);
+    }
+}

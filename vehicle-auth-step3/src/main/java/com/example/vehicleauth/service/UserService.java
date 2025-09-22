@@ -1,0 +1,33 @@
+package com.example.vehicleauth.service;
+
+import com.example.vehicleauth.model.Role;
+import com.example.vehicleauth.model.User;
+import com.example.vehicleauth.repo.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashSet;
+
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public User registerUser(String username, String rawPassword) {
+        if (userRepository.existsByUsername(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+        User u = new User();
+        u.setUsername(username);
+        u.setPassword(passwordEncoder.encode(rawPassword));
+        // default role USER
+        u.setRoles(new HashSet<>(Collections.singletonList(Role.ROLE_USER)));
+        return userRepository.save(u);
+    }
+}

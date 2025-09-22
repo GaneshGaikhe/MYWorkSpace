@@ -1,0 +1,9 @@
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\config\AuthConfig.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\entity\AuditLog.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\entity\Role.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\entity\User.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\repository\AuditLogRepository.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\repository\RoleRepository.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\repository\UserRepository.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\auth\service\UserService.java
+C:\Users\GANESH\Desktop\MYWORKSPACE\erp_backend\src\main\java\com\example\backend\ErpBackendApplication.java

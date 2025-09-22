@@ -1,0 +1,33 @@
+package com.example.backend.auth.controller;
+
+import com.example.backend.auth.dto.RegisterRequest;
+import com.example.backend.auth.entity.User;
+import com.example.backend.auth.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/auth")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
+        try {
+            User user = userService.registerUser(
+                    request.getUsername(),
+                    request.getPassword(),
+                    request.getFullName(),
+                    request.getEmail()
+            );
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}

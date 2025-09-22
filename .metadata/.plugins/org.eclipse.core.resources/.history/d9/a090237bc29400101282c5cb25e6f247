@@ -1,0 +1,12 @@
+com\example\backend\auth\entity\AuditLog.class
+com\example\backend\auth\entity\AuditLog$AuditLogBuilder.class
+com\example\backend\auth\repository\RoleRepository.class
+com\example\backend\auth\service\UserService.class
+com\example\backend\auth\repository\UserRepository.class
+com\example\backend\ErpBackendApplication.class
+com\example\backend\auth\entity\User.class
+com\example\backend\auth\repository\AuditLogRepository.class
+com\example\backend\auth\entity\Role$RoleBuilder.class
+com\example\backend\auth\config\AuthConfig.class
+com\example\backend\auth\entity\Role.class
+com\example\backend\auth\entity\User$UserBuilder.class

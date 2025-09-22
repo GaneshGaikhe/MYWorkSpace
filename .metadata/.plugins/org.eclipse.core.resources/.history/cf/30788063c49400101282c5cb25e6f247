@@ -1,0 +1,31 @@
+package com.example.backend.auth.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "audit_logs")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class AuditLog {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String action;        // e.g., CREATE_USER, LOGIN
+    private String entityName;    // e.g., User, Role
+    private Long entityId;        // id of entity affected
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;            // who performed the action
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+}

@@ -1,0 +1,15 @@
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# JWT properties
+jwt.secret=VerySecretKeyChangeMe
+jwt.expirationMs=900000  # 15 minutes
+jwt.refreshExpirationMs=604800000  # 7 days
+
+spring.jpa.hibernate.ddl-auto=update
+logging.level.org.springframework.security=DEBUG

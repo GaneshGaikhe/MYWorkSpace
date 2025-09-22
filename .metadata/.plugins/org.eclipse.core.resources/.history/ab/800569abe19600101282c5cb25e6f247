@@ -1,0 +1,34 @@
+package com.example.backend.auth.dto;
+
+
+
+
+public class AuthResponse {
+    private String accessToken;
+    private String refreshToken;
+    private String tokenType = "Bearer";
+	public String getAccessToken() {
+		return accessToken;
+	}
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+	public String getTokenType() {
+		return tokenType;
+	}
+	public AuthResponse(String accessToken, String refreshToken, String tokenType) {
+		super();
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
+		this.tokenType = tokenType;
+	}
+	public AuthResponse(String accessToken, String refreshToken) {
+		super();
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
+	}
+    
+	
+    
+    
+}
