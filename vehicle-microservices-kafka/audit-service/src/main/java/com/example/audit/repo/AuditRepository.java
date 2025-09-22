@@ -1,0 +1,1 @@
+package com.example.audit.repo; import com.example.audit.model.AuditRecord; import org.springframework.data.jpa.repository.JpaRepository; public interface AuditRepository extends JpaRepository<AuditRecord, Long> { }

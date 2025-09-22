@@ -1,0 +1,24 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: auth-service
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/vehicle_db}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:pass}
+  jpa:
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka:8761/eureka/}
+jwt:
+  secret: VerySecretKeyChangeMe
+  expirationMs: 900000
+  refreshExpirationMs: 604800000
+logging:
+  level:
+    org.springframework.security: DEBUG

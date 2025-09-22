@@ -1,0 +1,11 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: vehicle-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka:8761/eureka/}
+jwt:
+  secret: VerySecretKeyChangeMe

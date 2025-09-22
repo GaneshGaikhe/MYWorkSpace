@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: vehicle_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+  eureka:
+    build: ./eureka-server
+    ports: ["8761:8761"]
+    depends_on: [mysql]
+  auth-service:
+    build: ./auth-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/vehicle_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=pass
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+    ports: ["8081:8081"]
+    depends_on: [mysql, eureka]
+  vehicle-service:
+    build: ./vehicle-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
+    ports: ["8082:8082"]
+    depends_on: [eureka]
+  api-gateway:
+    build: ./api-gateway
+    ports: ["8080:8080"]
+    depends_on: [auth-service, vehicle-service, eureka]

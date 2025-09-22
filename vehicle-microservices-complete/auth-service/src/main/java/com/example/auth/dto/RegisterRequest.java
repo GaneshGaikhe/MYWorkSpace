@@ -1,0 +1,2 @@
+package com.example.auth.dto; import lombok.Getter; import lombok.Setter; import javax.validation.constraints.NotBlank; import javax.validation.constraints.Size;
+@Getter @Setter public class RegisterRequest { @NotBlank(message = "username is required") private String username; @NotBlank(message = "password is required") @Size(min = 6, message = "password must be at least 6 characters") private String password; }
